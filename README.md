@@ -119,23 +119,6 @@ job-application-bot/
 
 ---
 
-## 🌐 Deploy for Free (24/7)
-
-### Option A — Railway (Recommended)
-1. Push your code to GitHub
-2. Go to [railway.app](https://railway.app) → "New Project" → "Deploy from GitHub"
-3. Add your environment variables (`TELEGRAM_BOT_TOKEN`, `GROQ_API_KEY`)
-4. Deploy! ✅ Free tier: 500 hrs/month
-
-### Option B — Render
-1. Go to [render.com](https://render.com)
-2. New → Web Service → Connect your GitHub repo
-3. Build command: `pip install -r requirements.txt`
-4. Start command: `python main.py`
-5. Add environment variables → Deploy!
-
----
-
 ## 🤖 AI Model
 
 This bot uses **LLaMA 3.3 70B** via [Groq](https://groq.com), which provides:
