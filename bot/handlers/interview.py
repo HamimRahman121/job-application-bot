@@ -45,9 +45,7 @@ async def handle_interview(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     thinking_msg = await update.message.reply_text(get_thinking_message("interview"))
-
     result = await get_interview_questions(job_role)
-
     await thinking_msg.delete()
 
     save_analysis(
@@ -58,8 +56,7 @@ async def handle_interview(update: Update, context: ContextTypes.DEFAULT_TYPE):
         result_text=result,
     )
 
-    header = f"🎤 *Interview Guide: {job_role}*\n━━━━━━━━━━━━━━━━━━━━━\n\n"
-    chunks = split_message(header + result)
+    chunks = split_message(f"🎤 *Interview Guide: {job_role}*\n━━━━━━━━━━━━━━━━━━━━━\n\n" + result)
     for chunk in chunks:
         await update.message.reply_text(chunk, parse_mode="Markdown")
 

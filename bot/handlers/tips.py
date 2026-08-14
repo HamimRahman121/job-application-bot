@@ -41,9 +41,7 @@ async def handle_tips(update: Update, context: ContextTypes.DEFAULT_TYPE):
         topic = "general job hunting"
 
     thinking_msg = await update.message.reply_text(get_thinking_message("tips"))
-
     result = await get_job_tips(topic)
-
     await thinking_msg.delete()
 
     save_analysis(
@@ -54,8 +52,7 @@ async def handle_tips(update: Update, context: ContextTypes.DEFAULT_TYPE):
         result_text=result,
     )
 
-    header = f"💡 *Job Tips: {topic.title()}*\n━━━━━━━━━━━━━━━━━━━━━\n\n"
-    chunks = split_message(header + result)
+    chunks = split_message(f"💡 *Job Tips: {topic.title()}*\n━━━━━━━━━━━━━━━━━━━━━\n\n" + result)
     for chunk in chunks:
         await update.message.reply_text(chunk, parse_mode="Markdown")
 

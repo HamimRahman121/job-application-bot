@@ -38,16 +38,10 @@ async def handle_analyze(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
-    # Show thinking message
     thinking_msg = await update.message.reply_text(get_thinking_message("analyze"))
-
-    # Get AI analysis
     result = await analyze_cv(cv_text)
-
-    # Delete thinking message
     await thinking_msg.delete()
 
-    # Save to database
     save_analysis(
         user_id=user.id,
         username=user.username or user.first_name,
@@ -56,15 +50,10 @@ async def handle_analyze(update: Update, context: ContextTypes.DEFAULT_TYPE):
         result_text=result,
     )
 
-    # Send result (split if too long)
-    header = "📄 *CV Analysis Results*\n━━━━━━━━━━━━━━━━━━━━━\n\n"
-    full_response = header + result
-    chunks = split_message(full_response)
-
+    chunks = split_message("📄 *CV Analysis Results*\n━━━━━━━━━━━━━━━━━━━━━\n\n" + result)
     for chunk in chunks:
         await update.message.reply_text(chunk, parse_mode="Markdown")
 
-    # Clear mode and offer next step
     context.user_data.pop("mode", None)
     await update.message.reply_text(
         "━━━━━━━━━━━━━━━━━━━━━\n"

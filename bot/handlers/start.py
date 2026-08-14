@@ -105,8 +105,8 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "cmd_interview":   "🎤 *Interview Prep*\n\nWhat job role are you interviewing for?\n\nJust type the job title, e.g:\n• `Software Engineer`\n• `Data Scientist`\n• `Product Manager`",
         "cmd_linkedin":    "🔗 *LinkedIn Optimiser*\n\nPaste your LinkedIn *About* section or *Experience* text and I'll rewrite and optimise it for maximum recruiter visibility! 🚀",
         "cmd_tips":        "💡 *Job Hunting Tips*\n\nWhat topic do you want tips on? Just type it!\n\nExamples:\n• `getting my first tech job`\n• `salary negotiation`\n• `remote work`\n• `career change`\n• `networking on LinkedIn`",
-        "cmd_history":     None,  # handled separately
-        "cmd_help":        None,  # handled separately
+        "cmd_history":     None,
+        "cmd_help":        None,
     }
 
     if query.data == "cmd_history":
@@ -120,7 +120,5 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     prompt = command_map.get(query.data)
     if prompt:
-        # Store what mode the user is in
-        action = query.data.replace("cmd_", "")
-        context.user_data["mode"] = action
+        context.user_data["mode"] = query.data.replace("cmd_", "")
         await query.message.reply_text(prompt, parse_mode="Markdown")

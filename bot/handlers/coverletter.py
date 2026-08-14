@@ -2,6 +2,7 @@
 /coverletter command — Cover letter generator
 """
 
+import re
 from telegram import Update
 from telegram.ext import ContextTypes
 from bot.services.ai_service import generate_cover_letter
@@ -44,8 +45,6 @@ async def handle_coverletter(update: Update, context: ContextTypes.DEFAULT_TYPE)
     user = update.effective_user
     text = update.message.text.strip()
 
-    # Parse fields
-    import re
     def extract_field(label: str) -> str:
         match = re.search(rf"(?i){label}:\s*(.+?)(?=\n[A-Z]+:|$)", text, re.DOTALL)
         return match.group(1).strip() if match else ""
@@ -65,9 +64,7 @@ async def handle_coverletter(update: Update, context: ContextTypes.DEFAULT_TYPE)
         return
 
     thinking_msg = await update.message.reply_text(get_thinking_message("coverletter"))
-
     result = await generate_cover_letter(name, job, company, skills)
-
     await thinking_msg.delete()
 
     save_analysis(
@@ -78,8 +75,7 @@ async def handle_coverletter(update: Update, context: ContextTypes.DEFAULT_TYPE)
         result_text=result,
     )
 
-    header = f"✍️ *Cover Letter for {job} at {company}*\n━━━━━━━━━━━━━━━━━━━━━\n\n"
-    chunks = split_message(header + result)
+    chunks = split_message(f"✍️ *Cover Letter for {job} at {company}*\n━━━━━━━━━━━━━━━━━━━━━\n\n" + result)
     for chunk in chunks:
         await update.message.reply_text(chunk, parse_mode="Markdown")
 

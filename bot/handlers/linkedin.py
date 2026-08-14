@@ -48,9 +48,7 @@ async def handle_linkedin(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     thinking_msg = await update.message.reply_text(get_thinking_message("linkedin"))
-
     result = await improve_linkedin(profile_text)
-
     await thinking_msg.delete()
 
     save_analysis(
@@ -61,8 +59,7 @@ async def handle_linkedin(update: Update, context: ContextTypes.DEFAULT_TYPE):
         result_text=result,
     )
 
-    header = "🔗 *LinkedIn Optimisation Results*\n━━━━━━━━━━━━━━━━━━━━━\n\n"
-    chunks = split_message(header + result)
+    chunks = split_message("🔗 *LinkedIn Optimisation Results*\n━━━━━━━━━━━━━━━━━━━━━\n\n" + result)
     for chunk in chunks:
         await update.message.reply_text(chunk, parse_mode="Markdown")
 
