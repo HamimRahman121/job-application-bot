@@ -66,7 +66,7 @@ async def handle_coverletter(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
     thinking_msg = await update.message.reply_text(get_thinking_message("coverletter"))
 
-    result = generate_cover_letter(name, job, company, skills)
+    result = await generate_cover_letter(name, job, company, skills)
 
     await thinking_msg.delete()
 

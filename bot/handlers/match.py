@@ -72,7 +72,7 @@ async def handle_match(update: Update, context: ContextTypes.DEFAULT_TYPE):
     thinking_msg = await update.message.reply_text(get_thinking_message("match"))
 
     # Get AI result
-    result = match_cv_to_job(cv_text, job_text)
+    result = await match_cv_to_job(cv_text, job_text)
 
     await thinking_msg.delete()
 

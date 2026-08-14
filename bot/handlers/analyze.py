@@ -42,7 +42,7 @@ async def handle_analyze(update: Update, context: ContextTypes.DEFAULT_TYPE):
     thinking_msg = await update.message.reply_text(get_thinking_message("analyze"))
 
     # Get AI analysis
-    result = analyze_cv(cv_text)
+    result = await analyze_cv(cv_text)
 
     # Delete thinking message
     await thinking_msg.delete()

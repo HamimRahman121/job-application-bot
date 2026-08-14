@@ -49,7 +49,7 @@ async def handle_linkedin(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     thinking_msg = await update.message.reply_text(get_thinking_message("linkedin"))
 
-    result = improve_linkedin(profile_text)
+    result = await improve_linkedin(profile_text)
 
     await thinking_msg.delete()
 

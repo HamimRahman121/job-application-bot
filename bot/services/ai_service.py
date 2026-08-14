@@ -3,6 +3,7 @@ AI Service — Handles all Groq API interactions
 Uses LLaMA 3.3 70B model (free & powerful)
 """
 
+import asyncio
 from groq import Groq
 from config import GROQ_API_KEY, GROQ_MODEL
 
@@ -10,9 +11,9 @@ from config import GROQ_API_KEY, GROQ_MODEL
 client = Groq(api_key=GROQ_API_KEY)
 
 
-def ask_ai(system_prompt: str, user_message: str, temperature: float = 0.7) -> str:
+def _ask_ai_sync(system_prompt: str, user_message: str, temperature: float = 0.7) -> str:
     """
-    Send a prompt to Groq AI and return the response text.
+    Synchronous Groq API call — run inside asyncio.to_thread() to avoid blocking.
     """
     try:
         response = client.chat.completions.create(
@@ -29,9 +30,17 @@ def ask_ai(system_prompt: str, user_message: str, temperature: float = 0.7) -> s
         return f"⚠️ AI Error: {str(e)}\n\nPlease try again in a moment."
 
 
+async def ask_ai(system_prompt: str, user_message: str, temperature: float = 0.7) -> str:
+    """
+    Async wrapper — runs the blocking Groq call in a thread pool so the
+    bot event loop stays responsive.
+    """
+    return await asyncio.to_thread(_ask_ai_sync, system_prompt, user_message, temperature)
+
+
 # ── Prompt helpers ────────────────────────────────────────────────────────────
 
-def analyze_cv(cv_text: str) -> str:
+async def analyze_cv(cv_text: str) -> str:
     system = (
         "You are an expert career coach and professional CV reviewer with 15+ years of "
         "experience in HR and recruitment. Analyze the provided CV and give structured, "
@@ -50,10 +59,10 @@ CV Text:
 {cv_text}
 \"\"\"
 """
-    return ask_ai(system, user, temperature=0.5)
+    return await ask_ai(system, user, temperature=0.5)
 
 
-def match_cv_to_job(cv_text: str, job_description: str) -> str:
+async def match_cv_to_job(cv_text: str, job_description: str) -> str:
     system = (
         "You are an expert ATS (Applicant Tracking System) analyst and recruitment "
         "specialist. Compare CVs against job descriptions and give detailed match analysis. "
@@ -77,10 +86,10 @@ Job Description:
 {job_description}
 \"\"\"
 """
-    return ask_ai(system, user, temperature=0.4)
+    return await ask_ai(system, user, temperature=0.4)
 
 
-def generate_cover_letter(name: str, job_title: str, company: str, skills: str) -> str:
+async def generate_cover_letter(name: str, job_title: str, company: str, skills: str) -> str:
     system = (
         "You are an expert career writer who crafts compelling, personalized cover letters "
         "that get interviews. Write professional, enthusiastic cover letters tailored to "
@@ -101,10 +110,10 @@ Requirements:
 - Strong opening and closing
 - Ready to copy-paste and send
 """
-    return ask_ai(system, user, temperature=0.7)
+    return await ask_ai(system, user, temperature=0.7)
 
 
-def get_interview_questions(job_role: str) -> str:
+async def get_interview_questions(job_role: str) -> str:
     system = (
         "You are an expert interview coach who has helped thousands of candidates land "
         "their dream jobs. Provide realistic, role-specific interview questions with "
@@ -121,10 +130,10 @@ Provide:
 
 Role: {job_role}
 """
-    return ask_ai(system, user, temperature=0.6)
+    return await ask_ai(system, user, temperature=0.6)
 
 
-def get_job_tips(topic: str = "general") -> str:
+async def get_job_tips(topic: str = "general") -> str:
     system = (
         "You are a top career coach who gives practical, modern job hunting advice. "
         "Your tips are specific, actionable, and based on what actually works in today's "
@@ -139,10 +148,10 @@ Include:
 4. ⚠️ COMMON MISTAKES to avoid
 5. 🚀 POWER MOVES that most people miss
 """
-    return ask_ai(system, user, temperature=0.6)
+    return await ask_ai(system, user, temperature=0.6)
 
 
-def improve_linkedin(profile_text: str) -> str:
+async def improve_linkedin(profile_text: str) -> str:
     system = (
         "You are a LinkedIn expert who helps professionals optimize their profiles "
         "for maximum visibility and recruiter attention. Give specific, actionable "
@@ -160,4 +169,4 @@ Provide:
 3. ✨ PROFILE TIPS specific to this content
 4. 📊 VISIBILITY SCORE (out of 10)
 """
-    return ask_ai(system, user, temperature=0.6)
+    return await ask_ai(system, user, temperature=0.6)

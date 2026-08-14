@@ -42,7 +42,7 @@ async def handle_tips(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     thinking_msg = await update.message.reply_text(get_thinking_message("tips"))
 
-    result = get_job_tips(topic)
+    result = await get_job_tips(topic)
 
     await thinking_msg.delete()
 

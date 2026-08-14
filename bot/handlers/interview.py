@@ -46,7 +46,7 @@ async def handle_interview(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     thinking_msg = await update.message.reply_text(get_thinking_message("interview"))
 
-    result = get_interview_questions(job_role)
+    result = await get_interview_questions(job_role)
 
     await thinking_msg.delete()
 
